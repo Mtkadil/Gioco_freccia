@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>The Prince – Gioco della Freccia 🎯💈</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #000000, #2c2c2c);
+      color: gold;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: gold;
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+    }
+
+    .arrow {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 40px solid red;
+      z-index: 10;
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid gold;
+      position: relative;
+      overflow: hidden;
+      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    .segment {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 0%;
+      background: teal;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: gold;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #d4af37;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: limegreen;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Gioco della Freccia – The Prince 💈</h1>
+  <div class="wheel-container">
+    <div class="arrow"></div>
+    <div class="wheel" id="wheel"></div>
+  </div>
+  <button onclick="spin()">Gira la Freccia 🔄</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    const players = ["Cliente 1", "Cliente 2", "Cliente 3"]; // personalizza i nomi qui
+    const wheel = document.getElementById("wheel");
+    const resultDiv = document.getElementById("result");
+
+    const angleStep = 360 / players.length;
+    players.forEach((player, i) => {
+      const segment = document.createElement("div");
+      segment.classList.add("segment");
+      segment.style.transform = `rotate(${i * angleStep}deg) skewY(${90 - angleStep}deg)`;
+      segment.style.background = i % 2 === 0 ? "#333" : "gold";
+      segment.style.color = i % 2 === 0 ? "gold" : "black";
+      segment.innerHTML = `<div style="transform: skewY(-${90 - angleStep}deg) rotate(-${angleStep/2}deg); width:150px;">${player}</div>`;
+      wheel.appendChild(segment);
+    });
+
+    let rotation = 0;
+
+    function spin() {
+      resultDiv.textContent = "";
+      const randomSpin = 360 * 5 + Math.floor(Math.random() * 360);
+      rotation += randomSpin;
+      wheel.style.transform = `rotate(${rotation}deg)`;
+
+      setTimeout(() => {
+        const winningAngle = (rotation % 360);
+        const index = Math.floor((players.length - (winningAngle / angleStep)) % players.length);
+        const winner = players[index];
+        resultDiv.textContent = `🎉 Vince: ${winner}! 🎉`;
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
